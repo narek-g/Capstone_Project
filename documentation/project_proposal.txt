@@ -1,0 +1,12 @@
+### Project Proposal 
+The capstone project will explore modeling approaches for clothing segmentation. 
+The goal will be for users to select an image file (or upload, if a website is created in time), and allow the model to segment different clothing artifacts. 
+
+Clothing segmentation potentially allows for a better shopping experience. It's a field retailers are attempting to utilize. 
+Fortunately, this is a active area of reasearch and there are datasets used for such a problem. These datasets incorporate either an image and a mask for the clothing, or images with indicators (such as boxes) around the clothing. Data with the masks are likely to produce the best results with supervised learning (but this is yet to be tested). 
+
+Given image data is large, a single local machine may not suffice in training a deep learning model. For this reason, an online resource utilizing GPU's may be required. More on this to follow..
+
+There are privacy concerns regarding training data usage. If data is scrapped from onine image repositories, am I allowed to use them for training? If the data is not shared with anyone, does the usage of training data still pose an ethical study? 
+
+The final deliverable (product) will ideally be a website users may upload an image to and view the same image segmented in response. 
