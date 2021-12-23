@@ -1,0 +1,12 @@
+### Datasets 
+
+Dataset 1: (fashion mnist: a collection of grey-scale images)
+https://github.com/zalandoresearch/fashion-mnist 
+
+
+Dataset 3: (clothing co-parsing)
+https://github.com/bearpaw/clothing-co-parsing  
+
+Dataset 4: (fashion dataset, source: Kaggle)
+a lot of noise in these images in the form of background
+https://www.kaggle.com/nitinsss/fashion-dataset-with-over-15000-labelled-images 
