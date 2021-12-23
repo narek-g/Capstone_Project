@@ -3,6 +3,8 @@
 Dataset 1: (fashion mnist: a collection of grey-scale images)
 https://github.com/zalandoresearch/fashion-mnist 
 
+Dataset 2: (imaterialist fashion 2019 dataset)
+https://www.kaggle.com/c/imaterialist-fashion-2019-FGVC6/data 
 
 Dataset 3: (clothing co-parsing)
 https://github.com/bearpaw/clothing-co-parsing  
