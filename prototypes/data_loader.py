@@ -7,9 +7,11 @@ import numpy as np
 import random
 import math
 import matplotlib.pyplot as plt
-from torch.utils.data import Dataset, DataLoader
-from torchvision import transforms, utils
+from torch.utils.data import Dataset
+# from torchvision import transforms, utils
 from PIL import Image
+
+import cv2
 
 #==========================dataset load==========================
 class RescaleT(object):
@@ -223,6 +225,7 @@ class ToTensorLab(object):
 		return {'imidx':torch.from_numpy(imidx), 'image': torch.from_numpy(tmpImg), 'label': torch.from_numpy(tmpLbl)}
 
 class SalObjDataset(Dataset):
+	# def __init__(self,img_name_list,lbl_name_list,transform=None):
 	def __init__(self,img_name_list,lbl_name_list,transform=None):
 		# self.root_dir = root_dir
 		# self.image_name_list = glob.glob(image_dir+'*.png')
@@ -263,6 +266,7 @@ class SalObjDataset(Dataset):
 		sample = {'imidx':imidx, 'image':image, 'label':label}
 
 		if self.transform:
-			sample = self.transform(sample)
+			# sample = self.transform(sample)
+			sample = cv2.resize(sample, transform, interpolation = cv2.INTER_AREA)
 
 		return sample
