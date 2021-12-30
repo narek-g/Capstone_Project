@@ -12,3 +12,6 @@ https://github.com/bearpaw/clothing-co-parsing
 Dataset 4: (fashion dataset, source: Kaggle)
 a lot of noise in these images in the form of background
 https://www.kaggle.com/nitinsss/fashion-dataset-with-over-15000-labelled-images 
+
+Dataset 5: (COCO)
+https://cocodataset.org/#home 
