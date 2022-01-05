@@ -3,3 +3,4 @@ other_data_links.txt
 *.DS_Store
 data/.DS_Store
 *.pth
+prototypes/.ipynb_checkpoints/Experiment with Various Models-checkpoint.ipynb
