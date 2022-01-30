@@ -11,3 +11,7 @@ __pycache__/processData.cpython-38.pyc
 .DS_Store
 prototypes/.ipynb_checkpoints/DL Prototype-checkpoint.ipynb
 prototypes/.ipynb_checkpoints/Scaled DL Prototype-checkpoint.ipynb
+prototypes/create_mini_dataset.ipynb
+model/__pycache__/u2net.cpython-38.pyc
+model/__pycache__/u2net.cpython-37.pyc
+*.pyc
