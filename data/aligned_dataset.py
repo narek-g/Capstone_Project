@@ -153,7 +153,7 @@ class AlignedDataset(BaseDataset):
         shape: (height,width) of array to return
         Returns numpy array according to the shape, 1 - mask, 0 - background
         """
-        shape = (shape[1], shape[0])
+        # shape = (shape[1], shape[0])
         s = mask_rle.split()
         # gets starts & lengths 1d arrays
         starts, lengths = [np.asarray(x, dtype=int) for x in (s[0::2], s[1::2])]
@@ -161,9 +161,9 @@ class AlignedDataset(BaseDataset):
         # gets ends 1d array
         ends = starts + lengths
         # creates blank mask image 1d array
-        img = np.zeros(shape[0] * shape[1], dtype=np.uint8)
+        img = np.zeros(int(shape[0]) * int(shape[1]), dtype=np.uint8)
         # sets mark pixles
         for lo, hi in zip(starts, ends):
             img[lo:hi] = 1
         # reshape as a 2d mask image
-        return img.reshape(shape).T  # Needed to align to RLE direction
+        return img.reshape(int(shape[0]),int(shape[1])).T  # Needed to align to RLE direction

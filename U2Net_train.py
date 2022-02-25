@@ -21,20 +21,16 @@ import torch.distributed as dist
 import torch.multiprocessing as mp
 from torch.cuda.amp import autocast
 from torch.nn.parallel import DistributedDataParallel as DDP
-from torch.utils.tensorboard import SummaryWriter
 from torchvision import models
 
 from data.custom_dataset_data_loader import CustomDatasetDataLoader, sample_data
 
-
-from options.base_options import parser
 from utils.tensorboard_utils import board_add_images
 from utils.saving_utils import save_checkpoints
 from utils.saving_utils import load_checkpoint, load_checkpoint_mgpu
-from utils.distributed import get_world_size, set_seed, synchronize, cleanup
 
-from networks import U2NET
-
+# from networks import U2NET
+from model import U2NET
 
 def options_printing_saving(opt):
     os.makedirs(opt.logs_dir, exist_ok=True)
@@ -42,14 +38,7 @@ def options_printing_saving(opt):
     os.makedirs(os.path.join(opt.save_dir, "images"), exist_ok=True)
     os.makedirs(os.path.join(opt.save_dir, "checkpoints"), exist_ok=True)
 
-    # Saving options in yml file
-    option_dict = vars(opt)
-    with open(os.path.join(opt.save_dir, "training_options.yml"), "w") as outfile:
-        yaml.dump(option_dict, outfile)
-
-    for key, value in option_dict.items():
-        print(key, value)
-
+        
 
 def training_loop(opt):
 
@@ -61,25 +50,14 @@ def training_loop(opt):
         device = torch.device("cuda:0")
         local_rank = 0
 
+    
+    model_name = 'u2net'
     u_net = U2NET(in_ch=3, out_ch=4)
-    if opt.continue_train:
-        u_net = load_checkpoint(u_net, opt.unet_checkpoint)
-    u_net = u_net.to(device)
-    u_net.train()
 
-    if local_rank == 0:
-        with open(os.path.join(opt.save_dir, "networks.txt"), "w") as outfile:
-            print("<----U-2-Net---->", file=outfile)
-            print(u_net, file=outfile)
+    if torch.cuda.is_available():
+        u_net.cuda()
+        print('Cuda available..')
 
-    if opt.distributed:
-        u_net = nn.parallel.DistributedDataParallel(
-            u_net,
-            device_ids=[local_rank],
-            output_device=local_rank,
-            broadcast_buffers=False,
-        )
-        print("Going super fast with DistributedDataParallel")
 
     # initialize optimizer
     optimizer = optim.Adam(
@@ -93,28 +71,14 @@ def training_loop(opt):
     if local_rank == 0:
         dataset_size = len(custom_dataloader)
         print("Total number of images avaliable for training: %d" % dataset_size)
-        writer = SummaryWriter(opt.logs_dir)
         print("Entering training loop!")
 
     # loss function
     weights = np.array([1, 1.5, 1.5, 1.5], dtype=np.float32)
     weights = torch.from_numpy(weights).to(device)
     loss_CE = nn.CrossEntropyLoss(weight=weights).to(device)
-
-    pbar = range(opt.iter)
-    get_data = sample_data(loader)
-
-    start_time = time.time()
-    # Main training loop
-    for itr in pbar:
-        data_batch = next(get_data)
-        image, label = data_batch
-        image = Variable(image.to(device))
-        label = label.type(torch.long)
-        label = Variable(label.to(device))
-
-        d0, d1, d2, d3, d4, d5, d6 = u_net(image)
-
+    
+    def loss_fusion(d0,d1,d2,d3,d4,d5,d6,label):
         loss0 = loss_CE(d0, label)
         loss1 = loss_CE(d1, label)
         loss2 = loss_CE(d2, label)
@@ -123,13 +87,31 @@ def training_loop(opt):
         loss5 = loss_CE(d5, label)
         loss6 = loss_CE(d6, label)
         del d1, d2, d3, d4, d5, d6
-
         total_loss = loss0 * 1.5 + loss1 + loss2 + loss3 + loss4 + loss5 + loss6
+        return(total_loss, loss0)
+
+    epochs = range(opt.iter)
+    get_data = sample_data(loader)
+
+    start_time = time.time()
+    # Main training loop
+    for itr in epochs:
+        data_batch = next(get_data)
+        image, label = data_batch
+        # image = Variable(image.to(device))
+        image = Variable(image)
+        label = label.type(torch.long)
+        # label = Variable(label.to(device))
+        label = Variable(label)
+
+        d0, d1, d2, d3, d4, d5, d6 = u_net(image)
+        (total_loss, loss0) = loss_fusion(d0,d1,d2,d3,d4,d5,d6,label)
 
         for param in u_net.parameters():
             param.grad = None
 
         total_loss.backward()
+        
         if opt.clip_grad != 0:
             nn.utils.clip_grad_norm_(u_net.parameters(), opt.clip_grad)
         optimizer.step()
@@ -143,48 +125,49 @@ def training_loop(opt):
                     )
                 )
 
-            if itr % opt.image_log_freq == 0:
-                d0 = F.log_softmax(d0, dim=1)
-                d0 = torch.max(d0, dim=1, keepdim=True)[1]
-                visuals = [[image, torch.unsqueeze(label, dim=1) * 85, d0 * 85]]
-                board_add_images(writer, "grid", visuals, itr)
-
-            writer.add_scalar("total_loss", total_loss, itr)
-            writer.add_scalar("loss0", loss0, itr)
-
             if itr % opt.save_freq == 0:
                 save_checkpoints(opt, itr, u_net)
 
     print("Training done!")
-    if local_rank == 0:
-        itr += 1
-        save_checkpoints(opt, itr, u_net)
+
 
 
 if __name__ == "__main__":
 
-    opt = parser()
+    opt.name = "training_cloth_segm_u2net_aws_ex3"  # Expriment name
+    opt.image_folder = "/ubuntu/home/capstone/training_data/train"  # image folder path
+    opt.df_path = "/ubuntu/home/capstone/training_data/train.csv"  # label csv path
+    opt.isTrain = True
 
-    if opt.distributed:
-        if int(os.environ.get("LOCAL_RANK")) == 0:
-            options_printing_saving(opt)
-    else:
-        options_printing_saving(opt)
+    opt.fine_width = 192 * 4
+    opt.fine_height = 192 * 4
+
+    # Mean std params
+    opt.mean = 0.5
+    opt.std = 0.5
+
+    opt.batchSize = 2  # 12
+    opt.nThreads = 1  # 3
+    opt.max_dataset_size = float("inf")
+
+    opt.serial_batches = False
+    opt.continue_train = True
+    if opt.continue_train:
+        opt.unet_checkpoint = "prev_checkpoints/cloth_segm_unet_surgery.pth"
+
+    opt.save_freq = 10
+    opt.print_freq = 10
+    opt.image_log_freq = 10
+
+    opt.iter = 10000
+    opt.lr = 0.0002
+    opt.clip_grad = 5
+
+    opt.logs_dir = osp.join("logs", self.name)
+    opt.save_dir = osp.join("results", self.name)
 
     try:
-        if opt.distributed:
-            print("Initialize Process Group...")
-            torch.distributed.init_process_group(backend="nccl", init_method="env://")
-            synchronize()
-
-        set_seed(1000)
+        set_seed(400)
         training_loop(opt)
-        cleanup(opt.distributed)
-        print("Exiting..............")
+        print("Training complete..")
 
-    except KeyboardInterrupt:
-        cleanup(opt.distributed)
-
-    except Exception:
-        traceback.print_exc(file=sys.stdout)
-        cleanup(opt.distributed)

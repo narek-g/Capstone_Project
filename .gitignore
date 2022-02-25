@@ -15,3 +15,47 @@ prototypes/create_mini_dataset.ipynb
 model/__pycache__/u2net.cpython-38.pyc
 model/__pycache__/u2net.cpython-37.pyc
 *.pyc
+data/.DS_Store
+.DS_Store
+data/.DS_Store
+results/training_cloth_segm_u2net_exp1/output_log.txt
+results/training_cloth_segm_u2net_exp1/networks.txt
+results/training_cloth_segm_u2net_exp1/training_options.yml
+prototypes/.ipynb_checkpoints/train_U2Net-checkpoint.ipynb
+prototypes/.ipynb_checkpoints/train_U2Net-checkpoint.ipynb
+logs/training_cloth_segm_u2net_exp1/events.out.tfevents.1643575250.Narek-Silver.local.41064.0
+logs/training_cloth_segm_u2net_exp1/events.out.tfevents.1643575324.Narek-Silver.local.41090.0
+logs/training_cloth_segm_u2net_exp1/events.out.tfevents.1643575505.Narek-Silver.local.41116.0
+logs/training_cloth_segm_u2net_exp1/events.out.tfevents.1643575559.Narek-Silver.local.41143.0
+logs/training_cloth_segm_u2net_exp1/events.out.tfevents.1643575729.Narek-Silver.local.41174.0
+logs/training_cloth_segm_u2net_exp1/events.out.tfevents.1643575799.Narek-Silver.local.41198.0
+logs/training_cloth_segm_u2net_exp1/events.out.tfevents.1643575842.Narek-Silver.local.41217.0
+logs/training_cloth_segm_u2net_exp1/events.out.tfevents.1643576031.Narek-Silver.local.41266.0
+logs/training_cloth_segm_u2net_exp1/events.out.tfevents.1643576187.Narek-Silver.local.41305.0
+logs/training_cloth_segm_u2net_exp1/events.out.tfevents.1643577117.Narek-Silver.local.41453.0
+data/.DS_Store
+data/.DS_Store
+input_images/0a4f8205a3b58e70eec99fbbb9422d08.jpg
+input_images/0a563d036018e91cd9b5899adb50ec18 copy.jpg
+input_images/0d98a538dcc1ae339c2e4cfd235b9509.jpg
+output_images/0a4f8205a3b58e70eec99fbbb9422d08.png
+output_images/0a563d036018e91cd9b5899adb50ec18 copy.png
+output_images/0d98a538dcc1ae339c2e4cfd235b9509.png
+prototypes/.ipynb_checkpoints/train_U2Net-checkpoint.ipynb
+prototypes/.ipynb_checkpoints/train_U2Net-checkpoint.ipynb
+*.0
+results/training_cloth_segm_u2net_exp2/networks.txt
+results/training_cloth_segm_u2net_exp2/training_options.yml
+prototypes/.ipynb_checkpoints/train_U2Net-checkpoint.ipynb
+prototypes/.ipynb_checkpoints/U2Net_infer-checkpoint.ipynb
+prototypes/.ipynb_checkpoints/train_U2Net-checkpoint.ipynb
+prototypes/.ipynb_checkpoints/train_U2Net-checkpoint.ipynb
+options/base_options.py
+prototypes/.ipynb_checkpoints/CV_Advanced_Units-checkpoint.ipynb
+prototypes/.ipynb_checkpoints/train_U2Net-checkpoint.ipynb
+prototypes/Scaled DL Prototype.ipynb
+prototypes/Scaled DL Prototype.ipynb
+U2Net_train_GPU.py
+train.py
+utils/distributed.py
+utils/tensorboard_utils.py
