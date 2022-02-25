@@ -59,3 +59,5 @@ U2Net_train_GPU.py
 train.py
 utils/distributed.py
 utils/tensorboard_utils.py
+Production/utils/tensorboard_utils.py
+Production/utils/distributed.py
