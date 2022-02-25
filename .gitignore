@@ -61,3 +61,4 @@ utils/distributed.py
 utils/tensorboard_utils.py
 Production/utils/tensorboard_utils.py
 Production/utils/distributed.py
+.DS_Store
