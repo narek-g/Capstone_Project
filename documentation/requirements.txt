@@ -1,0 +1,6 @@
+aiofiles 
+FastAPI
+uvicorn
+pytorch (1.10)
+pillow
+python-multipart

@@ -62,3 +62,9 @@ utils/tensorboard_utils.py
 Production/utils/tensorboard_utils.py
 Production/utils/distributed.py
 .DS_Store
+Production/Deployment/model/__init__.py
+prototypes/.ipynb_checkpoints/test_prediction_class_for_deployment-checkpoint.ipynb
+prototypes/test_prediction_class_for_deployment.ipynb
+Production/Deployment/Results/segmented_image.png
+Production/Deployment/Image/test_image_1.jpg
+Production/Deployment/Image/test_image_2.jpg
