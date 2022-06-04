@@ -10,6 +10,6 @@ A semantic segmentation model is developed using U2-Net, trained on the imateril
 The model is hosted on an AWS server. 
 It may be accessed by either visiting http://18.144.74.125/docs, or executing a curl command through ther terminal (as shown in [deployment notebook](https://github.com/narek-g/Capstone_Project/blob/main/Production/Deployment/deployment.ipynb) ). 
 
-
+(Update! AWS server has been taken offline)
 The model works best if an image of less than 400 kB is sent.
 Further development necessary for segmenting various types of clothings (ex. long dress, mono-color suit). 
